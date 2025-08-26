@@ -1,14 +1,22 @@
 pipeline {
     agent any
     stages {
-        stage('Install Dependencies') {
+        stage('Setup Python Env') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                '''
             }
         }
         stage('Run Tests') {
             steps {
-                sh 'pytest'  // or "python3 -m unittest test_app.py"
+                sh '''
+                    . venv/bin/activate
+                    pytest
+                '''
             }
         }
     }
